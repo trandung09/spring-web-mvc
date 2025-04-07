@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: spring-web-01
+api:
+    prefix: /api/v1

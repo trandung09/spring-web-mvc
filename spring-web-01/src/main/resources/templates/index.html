@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng thông tin phim</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+</head>
+<body>
+
+    <h2>Danh sách phim</h2>
+    <button class="create-btn"><a th:href="@{/movies/create}">Thêm mới</a></button>
+    <table>
+        <thead>
+        <tr>
+            <th>Tên phim</th>
+            <th>Thể loại</th>
+            <th>Thời lượng (phút)</th>
+            <th>Đạo diễn</th>
+            <th>Mô tả</th>
+            <th>Danh mục</th>
+            <th>Ngày phát hành</th>
+            <th>Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr th:each="movie : ${movies}" th:data-id="${movie.getId()}">
+                <td th:text="${movie.getName()}"></td>
+                <td th:text="${movie.getGenre()}"></td>
+                <td th:text="${movie.getDuration()}"></td>
+                <td th:text="${movie.getDirector()}"></td>
+                <td th:text="${movie.getDescription()}"></td>
+                <td th:text="${movie.getCategory()}"></td>
+                <td th:text="${movie.getPublishedDate()}"></td>
+                <td>
+                    <button class="detail-btn">Chi tiết</button>
+                    <button th:movie-id="${movie.getId()}" th:movie-name="${movie.getName()}" class="delete-btn" onclick="deleteMovie()">Xóa</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        async function deleteMovie() {
+
+            const deleteBtn = document.querySelector(".delete-btn");
+
+            if (!deleteBtn) {
+                return;
+            }
+
+            const movieId = deleteBtn.getAttribute("movie-id");
+            const movieName = deleteBtn.getAttribute("movie-name");
+
+            console.log(movieId + " " + movieName);
+
+            if (confirm(`Are you sure you want to delete the "${movieName} movie?`)) {
+                try {
+
+                    const response = await fetch(`/movies/delete/` + movieId, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    if (response.ok) {
+                        const data = await response.text();
+                        alert(data);
+                        location.reload();
+                    } else {
+                        alert(`Cannot delete movie "${movieName}"`)
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert(error.message);
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
