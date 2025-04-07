@@ -43,7 +43,7 @@ public class MovieRepository {
     public void delete(Movie deleteMovie) throws IOException {
         List<Movie> movies = movieFileUtil.readDataFromFile(MOVIE_DATA_FILE_NAME, Movie[].class);
         movies = movies.stream()
-                .filter(movie -> movie != deleteMovie)
+                .filter(movie -> movie.getId() != deleteMovie.getId())
                 .toList();
 
         movieFileUtil.writeDataToFile(movies, MOVIE_DATA_FILE_NAME);

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết phim</title>
+    <link rel="stylesheet" th:href="@{/css/movie-details.css}">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Chi tiết phim</h2>
+
+        <div class="movie-detail">
+            <strong th:text="'Phim: ' + ${movie.name}"></strong>
+            <p><strong>Thể loại:</strong> <span th:text="${movie.genre}"></span></p>
+            <p><strong>Đạo diễn:</strong> <span th:text="${movie.director}"></span></p>
+            <p><strong>Mô tả:</strong> <span th:text="${movie.description}"></span></p>
+            <p><strong>Danh mục:</strong> <span th:text="${movie.category}"></span></p>
+            <p><strong>Thời lượng:</strong> <span th:text="${movie.duration}"></span> phút</p>
+            <p><strong>Ngày phát hành:</strong> <span th:text="${movie.publishedDate}"></span></p>
+        </div>
+
+        <a href="#" th:href="@{/movies}" class="btn btn-back">Quay lại danh sách</a>
+    </div>
+
+</body>
+</html>

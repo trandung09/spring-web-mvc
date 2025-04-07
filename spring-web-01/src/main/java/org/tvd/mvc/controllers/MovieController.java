@@ -29,6 +29,14 @@ public class MovieController {
         return "index";
     }
 
+    @GetMapping("/details/{movieId}")
+    public String details(@PathVariable int movieId, Model model) {
+        Movie movie = movieService.getMovieDetails(movieId)
+                .orElseThrow(() -> new NoSuchElementException("Cannot find movie with id: " + movieId));
+        model.addAttribute("movie", movie);
+        return "movie-details";
+    }
+
     @GetMapping("/create")
     public String create(Model model) {
         Movie movie = new Movie();
@@ -43,7 +51,7 @@ public class MovieController {
     }
 
     @PostMapping("/delete/{movieId}")
-    public String delete(@PathVariable int movieId) {
+    public String delete(@PathVariable int movieId, Model model) {
         Movie deleteMovie = movieService.getMovieDetails(movieId)
                 .orElseThrow(() -> new NoSuchElementException("Cannot find movie with id: " + movieId));
         movieService.deleteMovie(deleteMovie);
