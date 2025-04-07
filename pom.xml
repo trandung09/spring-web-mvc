@@ -23,7 +23,8 @@
 	</developers>
 	<modules>
 		<module>json-storage</module>
-	</modules>
+        <module>stream-api</module>
+    </modules>
 	<scm>
 		<connection/>
 		<developerConnection/>
