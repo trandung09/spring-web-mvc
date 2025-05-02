@@ -1,8 +1,8 @@
 package com.tvd;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
@@ -31,7 +31,8 @@ public class Main {
         System.out.println(sum);
 
         // 7. Lấy danh sách các phần tử không trùng nhau
-        Set<Integer> setNumber = numbers.stream().collect(Collectors.toSet());
+        Set<Integer> setNumber = new HashSet<>(numbers);
+        setNumber.forEach(System.out::println);
 
         // 8. Lấy 5 phần tử đầu tiên trong mảng
         List<Integer> nNumbers = numbers.stream().limit(5).toList();
@@ -51,6 +52,7 @@ public class Main {
 
         // 12. Kiểm tra xem list có phần tử > 10 hay không
         boolean v12 = numbers.stream().anyMatch(o -> o > 10);
+        System.out.println(v12);
 
         // 13. Có bao nhiêu phần tử > 5
         long v13 = numbers.stream().filter(o -> o > 5).count();
