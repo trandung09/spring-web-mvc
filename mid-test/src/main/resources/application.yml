@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: mid-test
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/pet_care
+    username: root
+    password: 090804
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: trandung09082004@gmail.com
+    password: "btuk waer mogd dxjv"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+api:
+  prefix: /api/v1
+
+openapi:
+  title: Pet Care API document
+  version: v1.0.0
+  description: Pet Care application
+  server:
+    description: localhost-dungtv2x
+  contact:
+    email: dungtv2x@gmail.com

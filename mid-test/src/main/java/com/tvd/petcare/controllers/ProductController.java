@@ -1,0 +1,88 @@
+package com.tvd.petcare.controllers;
+
+import com.tvd.petcare.dtos.requests.CreateProductRequest;
+import com.tvd.petcare.dtos.requests.UpdateProductRequest;
+import com.tvd.petcare.dtos.responses.ApiResponse;
+import com.tvd.petcare.dtos.responses.ProductResponse;
+import com.tvd.petcare.services.products.IProductService;
+import com.tvd.petcare.utils.BindingUtils;
+import com.tvd.petcare.utils.PageableUtils;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/products")
+@RequiredArgsConstructor
+@Tag(name = "Product-Controller")
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class ProductController {
+
+    final IProductService productService;
+
+    @GetMapping("")
+    public ApiResponse<Page<ProductResponse>> getAllProducts(@RequestParam(defaultValue = "0") int page,
+                                                             @RequestParam(defaultValue = "10") int size,
+                                                             @RequestParam(defaultValue = "id,asc") String sort)
+            throws Exception {
+
+        Pageable pageable = PageableUtils.convertPageable(page, size, sort);
+
+        return ApiResponse.<Page<ProductResponse>>builder()
+                .data(productService.getAllProducts(pageable))
+                .message("Get all products successfully")
+                .status(HttpStatus.OK)
+                .build();
+    }
+
+    @GetMapping("/{productId}")
+    public ApiResponse<ProductResponse> getProductDetailsById(@PathVariable Long productId) throws Exception {
+        return ApiResponse.<ProductResponse>builder()
+                .data(productService.getProductById(productId))
+                .message("Get product details by id successfully")
+                .status(HttpStatus.OK)
+                .build();
+    }
+
+    @PostMapping("")
+    public ApiResponse<?> createProduct(@Valid @RequestBody CreateProductRequest request,
+                                        BindingResult bindingResult) throws Exception {
+
+        if (bindingResult.hasErrors()) {
+            return BindingUtils.handleBindingErrors(bindingResult);
+        }
+
+        ProductResponse response = productService.createProduct(request);
+
+        return ApiResponse.<ProductResponse>builder()
+                .data(response)
+                .message("Created new product successfully")
+                .status(HttpStatus.OK)
+                .build();
+    }
+
+    @PatchMapping("/{productId}")
+    public ApiResponse<?> updateProductById(@PathVariable Long productId,
+                                            @Valid @RequestBody UpdateProductRequest request,
+                                            BindingResult bindingResult) throws Exception {
+
+        if (bindingResult.hasErrors()) {
+            return BindingUtils.handleBindingErrors(bindingResult);
+        }
+
+        ProductResponse response = productService.updateProductById(productId, request);
+
+        return ApiResponse.<ProductResponse>builder()
+                .data(response)
+                .message("Updated product successfully")
+                .status(HttpStatus.OK)
+                .build();
+    }
+}
