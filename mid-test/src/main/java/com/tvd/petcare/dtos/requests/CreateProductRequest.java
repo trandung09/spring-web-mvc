@@ -19,5 +19,7 @@ public class CreateProductRequest {
     @Min(message = "Product price must be positive", value = 0)
     double price;
 
+    String imagePath;
+
     String description;
 }

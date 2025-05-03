@@ -14,6 +14,5 @@ public interface ProductMapper {
 
     Product toProduct(UpdateProductRequest request);
 
-    @Mapping(target = "imagePath", ignore = true)
     ProductResponse toProductResponse(Product product);
 }

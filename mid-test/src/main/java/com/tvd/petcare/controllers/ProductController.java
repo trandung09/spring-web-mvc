@@ -6,17 +6,27 @@ import com.tvd.petcare.dtos.responses.ApiResponse;
 import com.tvd.petcare.dtos.responses.ProductResponse;
 import com.tvd.petcare.services.products.IProductService;
 import com.tvd.petcare.utils.BindingUtils;
+import com.tvd.petcare.utils.FileUtils;
 import com.tvd.petcare.utils.PageableUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/products")
@@ -25,12 +35,15 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductController {
 
+
+    final Path imageLocation = Paths.get("uploads/images/");
+
     final IProductService productService;
 
     @GetMapping("")
     public ApiResponse<Page<ProductResponse>> getAllProducts(@RequestParam(defaultValue = "0") int page,
                                                              @RequestParam(defaultValue = "10") int size,
-                                                             @RequestParam(defaultValue = "id,asc") String sort)
+                                                             @RequestParam(defaultValue = "createdAt,desc") String sort)
             throws Exception {
 
         Pageable pageable = PageableUtils.convertPageable(page, size, sort);
@@ -40,6 +53,38 @@ public class ProductController {
                 .message("Get all products successfully")
                 .status(HttpStatus.OK)
                 .build();
+    }
+
+    @GetMapping("/image")
+    public ResponseEntity<Resource> getImage(@RequestParam("filename") String filename) throws Exception {
+        try {
+            Path imagePath = imageLocation.resolve(filename).normalize();
+            Resource resource = new UrlResource(imagePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                String contentType = determineContentType(filename);
+
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+
+        } catch (MalformedURLException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    private String determineContentType(String filename) {
+        if (filename.endsWith(".png")) {
+            return "image/png";
+        } else if (filename.endsWith(".jpg") || filename.endsWith(".jpeg")) {
+            return "image/jpeg";
+        } else if (filename.endsWith(".gif")) {
+            return "image/gif";
+        }
+        return "application/octet-stream";
     }
 
     @GetMapping("/{productId}")
@@ -52,12 +97,22 @@ public class ProductController {
     }
 
     @PostMapping("")
-    public ApiResponse<?> createProduct(@Valid @RequestBody CreateProductRequest request,
-                                        BindingResult bindingResult) throws Exception {
+    public ApiResponse<?> createProduct(@RequestParam("name") String productName,
+                                        @RequestParam("price") double productPrice,
+                                        @RequestParam("description") String productDescription,
+                                        @RequestParam("image")MultipartFile file
+                                        ) throws Exception {
 
-        if (bindingResult.hasErrors()) {
-            return BindingUtils.handleBindingErrors(bindingResult);
-        }
+
+        CreateProductRequest request = CreateProductRequest.builder()
+                .name(productName)
+                .price(productPrice)
+                .description(productDescription)
+                .build();
+
+        String imagePath = FileUtils.onUpLoadFolder(file);
+
+        request.setImagePath(imagePath);
 
         ProductResponse response = productService.createProduct(request);
 

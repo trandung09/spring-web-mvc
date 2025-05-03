@@ -1,0 +1,26 @@
+td.description {
+    white-space: normal;
+    word-break: break-word;
+    max-width: 600px;
+}
+
+#productDetailsModal .modal-body .col-6 {
+    margin-right: 15px;
+}
+
+#productDetailsModal .modal-body .col-6:nth-child(2) {
+    margin-left: 15px;
+}
+
+#productDescriptionDetails {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+#productImage {
+    max-width: 100%;
+    height: auto;
+    max-height: 500px;
+    object-fit: contain;
+}
