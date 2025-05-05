@@ -17,7 +17,9 @@ public class UpdateProductRequest {
     String name;
 
     @Min(message = "Product price must be positive", value = 0)
-    double price;
+    double price = 0;
 
-    String description;
+    String description = "";
+
+    String imagePath = "";
 }

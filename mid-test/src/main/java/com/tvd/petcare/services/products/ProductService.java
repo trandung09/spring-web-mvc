@@ -1,5 +1,6 @@
 package com.tvd.petcare.services.products;
 
+import com.tvd.petcare.dtos.requests.PurchaseProductRequest;
 import com.tvd.petcare.mapper.ProductMapper;
 import com.tvd.petcare.dtos.requests.CreateProductRequest;
 import com.tvd.petcare.dtos.requests.UpdateProductRequest;
@@ -7,6 +8,7 @@ import com.tvd.petcare.dtos.responses.ProductResponse;
 import com.tvd.petcare.entities.Product;
 import com.tvd.petcare.exceptions.AppException;
 import com.tvd.petcare.repositories.ProductRepository;
+import com.tvd.petcare.services.mails.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,7 @@ public class ProductService implements IProductService {
 
     final ProductMapper productMapper;
     final ProductRepository productRepository;
+    final EmailService emailService;
 
     @Override
     public Page<ProductResponse> getAllProducts(Pageable pageable) throws Exception {
@@ -67,9 +70,36 @@ public class ProductService implements IProductService {
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
+        product.setImagePath(request.getImagePath());
 
         product = productRepository.save(product);
 
         return productMapper.toProductResponse(product);
     }
+
+    @Override
+    public void purchaseProduct(Long productId, String customerEmail, String customerName, String customerPhoneNumber, int quantity) throws  Exception {
+        if (customerEmail == null || customerName == null || customerPhoneNumber == null) {
+            throw new AppException("Purchase product: customer email and customer name is null");
+        }
+
+        if (productId == null) {
+            throw new AppException("Purchase product: product id is null");
+        }
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new AppException("Get product details: product by id not found"));
+
+        PurchaseProductRequest request = PurchaseProductRequest.builder()
+                .productName(product.getName())
+                .quantity(quantity)
+                .price(product.getPrice())
+                .build();
+
+        emailService.sendConfirmPurchaseProductEmail(customerEmail, customerName, customerPhoneNumber, request);
+
+
+    }
+
+
 }

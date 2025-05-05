@@ -1,9 +1,11 @@
 package com.tvd.petcare.controllers;
 
 import com.tvd.petcare.dtos.requests.CreateProductRequest;
+import com.tvd.petcare.dtos.requests.PurchaseProductRequest;
 import com.tvd.petcare.dtos.requests.UpdateProductRequest;
 import com.tvd.petcare.dtos.responses.ApiResponse;
 import com.tvd.petcare.dtos.responses.ProductResponse;
+import com.tvd.petcare.services.mails.EmailService;
 import com.tvd.petcare.services.products.IProductService;
 import com.tvd.petcare.utils.BindingUtils;
 import com.tvd.petcare.utils.FileUtils;
@@ -13,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -34,6 +37,9 @@ import java.nio.file.Paths;
 @Tag(name = "Product-Controller")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductController {
+
+
+    final EmailService emailService;
 
 
     final Path imageLocation = Paths.get("uploads/images/");
@@ -119,17 +125,29 @@ public class ProductController {
         return ApiResponse.<ProductResponse>builder()
                 .data(response)
                 .message("Created new product successfully")
-                .status(HttpStatus.OK)
+                .status(HttpStatus.CREATED)
                 .build();
     }
 
     @PatchMapping("/{productId}")
     public ApiResponse<?> updateProductById(@PathVariable Long productId,
-                                            @Valid @RequestBody UpdateProductRequest request,
-                                            BindingResult bindingResult) throws Exception {
+                                            @RequestParam(value = "name", required = true) String productName,
+                                            @RequestParam(value = "price", defaultValue = "0") double productPrice,
+                                            @RequestParam(value = "description", defaultValue = "") String productDescription,
+                                            @RequestParam(value = "image", required = false) MultipartFile file) throws Exception {
 
-        if (bindingResult.hasErrors()) {
-            return BindingUtils.handleBindingErrors(bindingResult);
+        UpdateProductRequest request = UpdateProductRequest.builder()
+                .name(productName)
+                .price(productPrice)
+                .description(productDescription)
+                .build();
+
+        System.out.println("Image file: " + (file != null ? file.getOriginalFilename() : "null"));
+
+
+        if (file != null) {
+            String newImagePath = FileUtils.onUpLoadFolder(file);
+            request.setImagePath(newImagePath);
         }
 
         ProductResponse response = productService.updateProductById(productId, request);
@@ -140,4 +158,21 @@ public class ProductController {
                 .status(HttpStatus.OK)
                 .build();
     }
+
+    @PostMapping("/purchase/{productId}")
+    public ApiResponse<?> purchaseProduct(@PathVariable Long productId,
+                                          @RequestParam String customerEmail,
+                                          @RequestParam String customerName,
+                                          @RequestParam String customerPhoneNumber,
+                                          @RequestParam(defaultValue = "1") int quantity) throws Exception {
+
+        productService.purchaseProduct(productId, customerEmail, customerName, customerPhoneNumber, quantity);
+
+        return ApiResponse.builder()
+                .status(HttpStatus.OK)
+                .message("Purchase product successfully")
+                .data(null)
+                .build();
+    }
+
 }

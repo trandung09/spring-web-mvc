@@ -9,24 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/admins")
+@RequestMapping("")
 @RequiredArgsConstructor
-@Tag(name = "Admin-Controller")
+@Tag(name = "Customer-Controller")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AdminController {
+public class CustomerController {
 
-    @GetMapping("/dashboard")
+    @GetMapping("")
     public String index() {
-        return "admin/index";
-    }
-
-    @GetMapping("/products")
-    public String products() {
-        return "admin/product-list";
-    }
-
-    @GetMapping("/appointments")
-    public String appointments() {
-        return "admin/appointment-list";
+        return "index";
     }
 }

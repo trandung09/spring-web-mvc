@@ -94,7 +94,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="updateProductForm">
+        <form id="updateProductForm" enctype="multipart/form-data">
           <div class="mb-3">
             <label for="productName" class="form-label">Tên sản phẩm</label>
             <input type="text" class="form-control" id="productName" required>
@@ -106,6 +106,10 @@
           <div class="mb-3">
             <label for="productDescription" class="form-label">Mô tả</label>
             <textarea class="form-control" id="productDescription" rows="3" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="updateProductImage" class="form-label">Hình ảnh (nếu muốn cập nhật)</label>
+            <input type="file" id="updateProductImage" class="form-control" accept="image/*">
           </div>
         </form>
       </div>
@@ -155,7 +159,7 @@
 
     <div id="main-content" style="padding: 20px 70px">
       <div class="d-flex align-items-center">
-        <h2 class="mb-0">Danh sách Sản phẩm</h2>
+        <h2 class="mb-0">Danh sách sản phẩm</h2>
         <button class="create-product-btn btn btn-success ms-3">
           <i class="fas fa-plus"></i> Tạo mới
         </button>
@@ -187,6 +191,7 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/utils.js}"></script>
 <script th:src="@{/js/admin/index.js}"></script>
 <script th:src="@{/js/admin/productListEvents.js}"></script>
 
