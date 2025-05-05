@@ -123,7 +123,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     async function confirmStatusChange() {
         const selectedValue = document.querySelector('input[name="newStatus"]:checked').value;
 
-        const status = selectedValue === "Từ chối" ? "REJECTED" : "APPROVED";
+        console.log("#################");
+        console.log(selectedValue);
+        console.log("#################");
+
+        const status = selectedValue === "REJECTED" ? "REJECTED" : "APPROVED";
 
         try {
             const response = await fetch(`http://localhost:8080/appointments/${selectedAppointmentId}?status=${status}`, {
