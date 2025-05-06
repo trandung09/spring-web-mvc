@@ -156,12 +156,12 @@ public class ProductController {
 
     @PostMapping("/purchase/{productId}")
     public ApiResponse<?> purchaseProduct(@PathVariable Long productId,
-                                          @RequestParam String customerEmail,
-                                          @RequestParam String customerName,
-                                          @RequestParam String customerPhoneNumber,
+                                          @RequestParam String buyerEmail,
+                                          @RequestParam String buyerName,
+                                          @RequestParam String buyerPhoneNumber,
                                           @RequestParam(defaultValue = "1") int quantity) throws Exception {
 
-        productService.purchaseProduct(productId, customerEmail, customerName, customerPhoneNumber, quantity);
+        productService.purchaseProduct(productId, buyerEmail, buyerName, buyerPhoneNumber, quantity);
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK)
