@@ -175,7 +175,7 @@ public class MailTemplate {
               <p>[[REQUEST_CONTENT]]</p>
             </div>
 
-            <p>Chúng tôi sẽ liên hệ lại với bạn trong thời gian sớm nhất để xác nhận lịch hẹn.</p>
+            <p>Chúng tôi [[CONFIRM_OR_REJECT]]</p>
             <p>Nếu bạn có bất kỳ câu hỏi nào, hãy liên hệ với chúng tôi qua email bên dưới.</p>
           </div>
           <div class="footer">

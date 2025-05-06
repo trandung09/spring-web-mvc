@@ -22,7 +22,7 @@ public class EmailService {
     @Value("${spring.mail.username}")
     String adminEmailAddress;
 
-    public void sendConfirmPurchaseProductEmail(String customerEmail, String customerName, String customerPhoneNumber, PurchaseProductRequest request) throws Exception {
+    public void sendConfirmPurchaseProductEmail(String bookerEmail, String bookerName, String bookerPhoneNumber, PurchaseProductRequest request) throws Exception {
         String senderName = "Drool - Pet Care";
         String subject = "Xác nhận đơn hàng của bạn";
 
@@ -30,8 +30,8 @@ public class EmailService {
 
         double totalPrice = request.getPrice() * request.getQuantity();
 
-        content = content.replace("[[PHONE]]", customerPhoneNumber);
-        content = content.replace("[[USER_NAME]]", customerName);
+        content = content.replace("[[PHONE]]", bookerPhoneNumber);
+        content = content.replace("[[USER_NAME]]", bookerName);
         content = content.replace("[[PRODUCT_NAME]]", request.getProductName());
         content = content.replace("[[UNIT_PRICE]]", String.format("%,.0f", request.getPrice()));
         content = content.replace("[[QUANTITY]]", String.valueOf(request.getQuantity()));
@@ -41,9 +41,10 @@ public class EmailService {
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
         helper.setFrom(adminEmailAddress, senderName);
-        helper.setTo(customerEmail);
+        helper.setTo(bookerEmail);
         helper.setSubject(subject);
         helper.setText(content, true);
+
         mailSender.send(message);
     }
 
@@ -57,6 +58,11 @@ public class EmailService {
 
         content = content.replace("[[USER_NAME]]", customerName);
         content = content.replace("[[REQUEST_CONTENT]]", customerRequestContent);
+
+        String confirmOrRejectRequestContent = confirm
+                ? "sẽ liên hệ lại với bạn trong thời gian sớm nhất để xác nhận lịch hẹn."
+                : "xin thông báo rằng lịch hẹn của không thể thực hiện được lịch hẹn của bạn vì một vài lý do.";
+        content = content.replace("[[CONFIRM_OR_REJECT]]", confirmOrRejectRequestContent );
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
