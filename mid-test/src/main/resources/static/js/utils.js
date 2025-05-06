@@ -58,7 +58,7 @@ async function getImageAsBlob(filename) {
         }
 
         const blob = await response.blob();
-        return URL.createObjectURL(blob); // Tạo URL tạm từ blob
+        return URL.createObjectURL(blob);
     } catch (error) {
         console.error("Lỗi tải ảnh:", error);
         return null;

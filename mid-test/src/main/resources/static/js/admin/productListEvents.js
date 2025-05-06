@@ -196,7 +196,7 @@
             const productName = productNameInput.value;
             const productPrice = productPriceInput.value;
             const productDescription = productDescriptionInput.value;
-            const productImageFile = document.getElementById("updateProductImage").files[0]; // Bạn cần thêm thẻ input type="file" trong modal cập nhật
+            const productImageFile = document.getElementById("updateProductImage").files[0];
 
             console.log("#######################")
             console.log(productImageFile);

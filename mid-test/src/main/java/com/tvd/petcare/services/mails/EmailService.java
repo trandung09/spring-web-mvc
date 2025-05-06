@@ -31,11 +31,11 @@ public class EmailService {
         double totalPrice = request.getPrice() * request.getQuantity();
 
         content = content.replace("[[PHONE]]", customerPhoneNumber);
-        content = content.replace("[[USER_NAME]]", customerName); // ✅ Dùng tên thay vì email
+        content = content.replace("[[USER_NAME]]", customerName);
         content = content.replace("[[PRODUCT_NAME]]", request.getProductName());
-        content = content.replace("[[UNIT_PRICE]]", String.format("%,.0f", request.getPrice())); // thêm định dạng ngăn cách ngàn
+        content = content.replace("[[UNIT_PRICE]]", String.format("%,.0f", request.getPrice()));
         content = content.replace("[[QUANTITY]]", String.valueOf(request.getQuantity()));
-        content = content.replace("[[TOTAL_PRICE]]", String.format("%,.0f", totalPrice)); // thêm định dạng ngăn cách ngàn
+        content = content.replace("[[TOTAL_PRICE]]", String.format("%,.0f", totalPrice));
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -64,7 +64,7 @@ public class EmailService {
         helper.setFrom(adminEmailAddress, senderName);
         helper.setTo(customerEmail);
         helper.setSubject(subject);
-        helper.setText(content, true); // true để gửi HTML
+        helper.setText(content, true);
 
         mailSender.send(message);
     }

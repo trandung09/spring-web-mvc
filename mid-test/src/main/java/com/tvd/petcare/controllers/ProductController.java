@@ -1,21 +1,17 @@
 package com.tvd.petcare.controllers;
 
 import com.tvd.petcare.dtos.requests.CreateProductRequest;
-import com.tvd.petcare.dtos.requests.PurchaseProductRequest;
 import com.tvd.petcare.dtos.requests.UpdateProductRequest;
 import com.tvd.petcare.dtos.responses.ApiResponse;
 import com.tvd.petcare.dtos.responses.ProductResponse;
 import com.tvd.petcare.services.mails.EmailService;
 import com.tvd.petcare.services.products.IProductService;
-import com.tvd.petcare.utils.BindingUtils;
 import com.tvd.petcare.utils.FileUtils;
 import com.tvd.petcare.utils.PageableUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -23,7 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -131,9 +126,9 @@ public class ProductController {
 
     @PatchMapping("/{productId}")
     public ApiResponse<?> updateProductById(@PathVariable Long productId,
-                                            @RequestParam(value = "name", required = true) String productName,
-                                            @RequestParam(value = "price", defaultValue = "0") double productPrice,
-                                            @RequestParam(value = "description", defaultValue = "") String productDescription,
+                                            @RequestParam(value = "name", required = false) String productName,
+                                            @RequestParam(value = "price", defaultValue = "0", required = false) double productPrice,
+                                            @RequestParam(value = "description", defaultValue = "", required = false) String productDescription,
                                             @RequestParam(value = "image", required = false) MultipartFile file) throws Exception {
 
         UpdateProductRequest request = UpdateProductRequest.builder()

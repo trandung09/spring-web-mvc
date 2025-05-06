@@ -32,7 +32,7 @@
     opacity: 0.7;
 }
 
-/* Nav links */
+
 .sidebar .nav-link {
     color: #adb5bd;
     padding: 12px 20px;
@@ -56,7 +56,6 @@
     display: none;
 }
 
-/* ====== Content Wrapper ====== */
 .content-wrapper {
     flex: 1;
     background-color: #f8f9fa;
@@ -70,7 +69,6 @@
     align-items: center;
 }
 
-/* Navbar toggle button */
 .navbar {
     height: 70px;
 }
@@ -83,7 +81,6 @@
     margin-right: 10px;
 }
 
-/* ====== Responsive ====== */
 @media (max-width: 768px) {
     .sidebar {
         position: fixed;
