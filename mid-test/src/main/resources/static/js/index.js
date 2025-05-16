@@ -103,11 +103,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       try {
         const response = await fetch(
-          `http://localhost:8080/products/purchase/${productId}?customerEmail=${encodeURIComponent(
+          `http://localhost:8080/products/purchase/${productId}?buyerEmail=${encodeURIComponent(
             customerEmail
-          )}&customerName=${encodeURIComponent(
+          )}&buyerName=${encodeURIComponent(
             customerName
-          )}&customerPhoneNumber=${encodeURIComponent(
+          )}&buyerPhoneNumber=${encodeURIComponent(
             customerPhoneNumber
           )}&quantity=${quantity}`,
           {
